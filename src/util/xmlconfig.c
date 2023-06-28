@@ -1165,6 +1165,13 @@ initOptionCache(driOptionCache *cache, const driOptionCache *info)
    }
 }
 
+#ifdef __ANDROID__
+#undef SYSCONFDIR
+#undef DATADIR
+#define SYSCONFDIR "/vendor/etc"
+#define DATADIR "/data/vendor"
+#endif /* __ANDROID__ */
+
 static const char *execname;
 
 void
