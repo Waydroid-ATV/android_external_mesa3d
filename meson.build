@@ -1774,8 +1774,8 @@ endif
 
 # We don't require expat on Android or Windows
 use_xmlconfig = get_option('xmlconfig') \
-  .require(not (with_platform_android or with_platform_windows),
-           error_message : 'xmlconfig not available on Android or Windows') \
+  .require(not (with_platform_windows),
+           error_message : 'xmlconfig not available on Windows') \
   .require(dep_expat.found(),
            error_message : 'requires expat') \
   .allowed()
