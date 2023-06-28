@@ -103,6 +103,7 @@ MESON_GEN_NINJA := \
 	-Dandroid-libbacktrace=disabled                                              \
 	-Dgallium-va=$(BOARD_MESA3D_GALLIUM_VA)						                 \
 	-Dvideo-codecs=$(subst $(space),$(comma),$(BOARD_MESA3D_VIDEO_CODECS))       \
+	-Dxmlconfig=enabled															 \
 	$(BOARD_MESA3D_MESON_ARGS)                                                   \
 
 MESON_BUILD := PATH=/usr/bin:/bin:/sbin:$$PATH ninja -C $(MESON_OUT_DIR)/build
