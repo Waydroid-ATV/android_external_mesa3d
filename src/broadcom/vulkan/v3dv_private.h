@@ -229,6 +229,8 @@ struct v3dv_instance {
    struct driOptionCache dri_options;
    struct driOptionCache available_dri_options;
 
+   char *force_vk_devicename;
+
    bool pipeline_cache_enabled;
    bool default_pipeline_cache_enabled;
    bool meta_cache_enabled;

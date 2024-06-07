@@ -2023,7 +2023,8 @@ radv_get_physical_device_properties(struct radv_physical_device *pdev)
 
    struct vk_properties *p = &pdev->vk.properties;
 
-   strcpy(p->deviceName, pdev->marketing_name);
+   strcpy(p->deviceName, (strlen(instance->drirc.force_vk_devicename) > 0) ?
+   instance->drirc.force_vk_devicename : pdev->marketing_name);
    memcpy(p->pipelineCacheUUID, pdev->cache_uuid, VK_UUID_SIZE);
 
    memcpy(p->deviceUUID, pdev->device_uuid, VK_UUID_SIZE);
