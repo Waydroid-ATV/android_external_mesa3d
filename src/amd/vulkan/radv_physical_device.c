@@ -1580,6 +1580,8 @@ radv_init_image_properties(struct radv_physical_device *pdev)
 static void
 radv_get_physical_device_properties(struct radv_physical_device *pdev)
 {
+   const struct radv_instance *instance = radv_physical_device_instance(pdev);
+
    VkSampleCountFlags sample_counts = 0xf;
 
    size_t max_descriptor_set_size = radv_max_descriptor_set_size();
@@ -2178,7 +2180,8 @@ radv_get_physical_device_properties(struct radv_physical_device *pdev)
 
    struct vk_properties *p = &pdev->vk.properties;
 
-   strcpy(p->deviceName, pdev->marketing_name);
+   strcpy(p->deviceName, (strlen(instance->drirc.force_vk_devicename) > 0) ?
+   instance->drirc.force_vk_devicename : pdev->marketing_name);
    memcpy(p->pipelineCacheUUID, pdev->cache_uuid, VK_UUID_SIZE);
 
    memcpy(p->deviceUUID, pdev->device_uuid, VK_UUID_SIZE);

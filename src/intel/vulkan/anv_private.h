@@ -1775,6 +1775,7 @@ struct anv_instance {
     unsigned                                    query_clear_with_blorp_threshold;
     unsigned                                    query_copy_with_shader_threshold;
     unsigned                                    force_vk_vendor;
+    char                                        *force_vk_devicename;
     bool                                        has_fake_sparse;
     bool                                        disable_fcv;
     bool                                        enable_buffer_comp;
