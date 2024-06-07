@@ -85,6 +85,8 @@ struct radv_drirc {
       uint8_t override_graphics_shader_version;
       uint8_t override_ray_tracing_shader_version;
    } misc;
+
+   char *force_vk_devicename;
 };
 
 struct radv_instance {

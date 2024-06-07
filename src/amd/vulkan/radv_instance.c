@@ -169,6 +169,7 @@ static const driOptionDescription radv_dri_options[] = {
    DRI_CONF_SECTION_END
 
    DRI_CONF_SECTION_DEBUG
+      DRI_CONF_FORCE_VK_DEVICENAME()
       DRI_CONF_OVERRIDE_VRAM_SIZE()
       DRI_CONF_VK_LOWER_TERMINATE_TO_DISCARD(false)
       DRI_CONF_VK_WSI_FORCE_BGRA8_UNORM_FIRST(false)
@@ -212,6 +213,7 @@ radv_init_dri_debug_options(struct radv_instance *instance)
 {
    struct radv_drirc *drirc = &instance->drirc;
 
+   drirc->force_vk_devicename = driQueryOptionstr(&drirc->options, "force_vk_devicename");
    drirc->debug.disable_aniso_single_level = driQueryOptionb(&drirc->options, "radv_disable_aniso_single_level");
    drirc->debug.disable_dcc_mips = driQueryOptionb(&drirc->options, "radv_disable_dcc_mips");
    drirc->debug.disable_dcc_stores = driQueryOptionb(&drirc->options, "radv_disable_dcc_stores");
