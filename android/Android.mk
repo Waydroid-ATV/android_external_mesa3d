@@ -97,10 +97,8 @@ LOCAL_SHARED_LIBRARIES += libLLVM$(LLVM_VERSION_MAJOR)
 endif
 
 ifneq ($(strip $(BOARD_MESA3D_GALLIUM_VA)),)
-LIBVA_MAJOR_VERSION = $(shell cat external/libva/meson.build | grep -o 'va_api_major_version = [0-9]\+' | grep -o '[0-9]*')
-LIBVA_MINOR_VERSION = $(shell cat external/libva/meson.build | grep -o 'va_api_minor_version = [0-9]\+' | grep -o '[0-9]*')
 LOCAL_SHARED_LIBRARIES += libva
-MESON_GEN_PKGCONFIGS += libva:$(LIBVA_MAJOR_VERSION).$(LIBVA_MINOR_VERSION)
+MESON_GEN_PKGCONFIGS += libva:2.22.0
 endif
 
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 30; echo $$?), 0)
@@ -178,8 +176,10 @@ $(eval $(call mesa3d-lib,libgallium_dri,,MESA3D_GALLIUM_BIN))
 $(eval $(call mesa3d-lib,libglapi,,MESA3D_LIBGLAPI_BIN))
 # Module 'libgallium_dri', produces '/vendor/lib{64}/dri/{driver_name}_drv_video.so'
 ifneq ($(strip $(BOARD_MESA3D_GALLIUM_VA)),)
-$(foreach driver,$(BOARD_MESA3D_GALLIUM_DRIVERS), \
-    $(eval $(call mesa3d-lib,$(subst virgl,virtio_gpu,$(driver))_drv_video,dri,,,libgallium_dri)))
+# nouveau, radeonsi, virtio_gpu
+$(eval $(call mesa3d-lib,nouveau_drv_video,dri,,,libgallium_dri))
+$(eval $(call mesa3d-lib,radeonsi_drv_video,dri,,,libgallium_dri))
+$(eval $(call mesa3d-lib,virtio_gpu_drv_video,dri,,,libgallium_dri))
 endif
 # Module 'libEGL_mesa', produces '/vendor/lib{64}/egl/libEGL_mesa.so'
 $(eval $(call mesa3d-lib,libEGL_mesa,egl,MESA3D_LIBEGL_BIN))
