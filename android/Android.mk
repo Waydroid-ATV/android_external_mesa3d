@@ -98,6 +98,7 @@ endif
 
 ifneq ($(strip $(BOARD_MESA3D_GALLIUM_VA)),)
 LOCAL_SHARED_LIBRARIES += libva
+LOCAL_HEADER_LIBRARIES += libva_headers
 MESON_GEN_PKGCONFIGS += libva:2.22.0
 endif
 
