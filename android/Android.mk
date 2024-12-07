@@ -177,10 +177,8 @@ $(eval $(call mesa3d-lib,libgallium_dri,,MESA3D_GALLIUM_BIN))
 $(eval $(call mesa3d-lib,libglapi,,MESA3D_LIBGLAPI_BIN))
 # Module 'libgallium_dri', produces '/vendor/lib{64}/dri/{driver_name}_drv_video.so'
 ifneq ($(strip $(BOARD_MESA3D_GALLIUM_VA)),)
-# nouveau, radeonsi, virtio_gpu
-$(eval $(call mesa3d-lib,nouveau_drv_video,dri,,,libgallium_dri))
-$(eval $(call mesa3d-lib,radeonsi_drv_video,dri,,,libgallium_dri))
-$(eval $(call mesa3d-lib,virtio_gpu_drv_video,dri,,,libgallium_dri))
+$(foreach driver,$(BOARD_MESA3D_GALLIUM_VA_DRIVERS), \
+    $(eval $(call mesa3d-lib,$(driver)_drv_video,dri,,,libgallium_dri)))
 endif
 # Module 'libEGL_mesa', produces '/vendor/lib{64}/egl/libEGL_mesa.so'
 $(eval $(call mesa3d-lib,libEGL_mesa,egl,MESA3D_LIBEGL_BIN))
