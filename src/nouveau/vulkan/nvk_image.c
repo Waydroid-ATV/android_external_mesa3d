@@ -916,7 +916,7 @@ nvk_image_init(struct nvk_device *dev,
    return VK_SUCCESS;
 }
 
-static void
+static VkResult
 nvk_image_layout(struct nvk_device *dev, struct nvk_image *image)
 {
    const struct nvk_physical_device *pdev = nvk_device_physical(dev);
@@ -1260,7 +1260,7 @@ nvk_CreateImage(VkDevice _device,
       return result;
    }
 
-   nvk_image_layout(dev, image);
+   result = nvk_image_layout(dev, image);
 
    if (image->vk.create_flags & (VK_IMAGE_CREATE_SPARSE_BINDING_BIT |
                                  VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT)) {
@@ -1410,7 +1410,7 @@ nvk_GetDeviceImageMemoryRequirements(VkDevice device,
 
    result = nvk_image_init(dev, &image, pInfo->pCreateInfo);
    assert(result == VK_SUCCESS);
-   nvk_image_layout(dev, &image);
+   result = nvk_image_layout(dev, &image);
 
    const VkImageAspectFlags aspects =
       image.disjoint ? pInfo->planeAspect : image.vk.aspects;
@@ -1521,7 +1521,7 @@ nvk_GetDeviceImageSparseMemoryRequirements(
 
    result = nvk_image_init(dev, &image, pInfo->pCreateInfo);
    assert(result == VK_SUCCESS);
-   nvk_image_layout(dev, &image);
+   result = nvk_image_layout(dev, &image);
 
    const VkImageAspectFlags aspects =
       image.disjoint ? pInfo->planeAspect : image.vk.aspects;
@@ -1591,7 +1591,7 @@ nvk_GetDeviceImageSubresourceLayoutKHR(
 
    result = nvk_image_init(dev, &image, pInfo->pCreateInfo);
    assert(result == VK_SUCCESS);
-   nvk_image_layout(dev, &image);
+   result = nvk_image_layout(dev, &image);
 
    nvk_get_image_subresource_layout(dev, &image, pInfo->pSubresource, pLayout);
 
