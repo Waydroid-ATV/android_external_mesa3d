@@ -116,6 +116,7 @@ LIBVA_VERSION_MAJOR := $(shell sed -n -e 's/va_api_major_version *= *//p' $(LIBV
 LIBVA_VERSION_MINOR := $(shell sed -n -e 's/va_api_minor_version *= *//p' $(LIBVA_DIR)/meson.build)
 MESON_GEN_PKGCONFIGS += libva:$(LIBVA_VERSION_MAJOR).$(LIBVA_VERSION_MINOR)
 LOCAL_SHARED_LIBRARIES += libva
+LOCAL_HEADER_LIBRARIES += libva_headers
 endif
 
 __MY_SHARED_LIBRARIES := $(LOCAL_SHARED_LIBRARIES)
