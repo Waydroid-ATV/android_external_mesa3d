@@ -65,6 +65,7 @@ struct radv_drirc {
       bool force_64_byte_sampled_image;
       char *app_layer;
       int override_uniform_offset_alignment;
+      char *force_vk_devicename;
    } debug;
 
    struct {
