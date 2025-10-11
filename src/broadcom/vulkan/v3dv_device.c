@@ -553,6 +553,10 @@ static const driOptionDescription v3dv_dri_options[] = {
       DRI_CONF_VK_X11_ENSURE_MIN_IMAGE_COUNT(false)
       DRI_CONF_VK_XWAYLAND_WAIT_READY(true)
    DRI_CONF_SECTION_END
+
+   DRI_CONF_SECTION_DEBUG
+      DRI_CONF_FORCE_VK_DEVICENAME()
+   DRI_CONF_SECTION_END
 };
 
 static void
@@ -563,6 +567,8 @@ v3dv_init_dri_options(struct v3dv_instance *instance)
    driParseConfigFiles(&instance->dri_options, &instance->available_dri_options, 0, "v3dv", NULL, NULL,
                        instance->vk.app_info.app_name, instance->vk.app_info.app_version,
                        instance->vk.app_info.engine_name, instance->vk.app_info.engine_version);
+   instance->force_vk_devicename =
+      driQueryOptionstr(&instance->dri_options, "force_vk_devicename");
 }
 
 VKAPI_ATTR VkResult VKAPI_CALL
@@ -1261,7 +1267,8 @@ get_device_properties(const struct v3dv_physical_device *device,
 
    /* VkPhysicalDeviceProperties */
    snprintf(properties->deviceName, sizeof(properties->deviceName),
-            "%s", device->name);
+            "%s", (strlen(device->instance->force_vk_devicename) > 0) ?
+            device->instance->force_vk_devicename : device->name);
    memcpy(properties->pipelineCacheUUID,
             device->pipeline_cache_uuid, VK_UUID_SIZE);
 
@@ -1326,6 +1333,7 @@ create_physical_device(struct v3dv_instance *instance,
    device->sim_file = v3d_simulator_init(render_fd);
 #endif
 
+   device->instance = instance;
    device->primary_fd = primary_fd;
    device->render_fd = render_fd;
    device->display_fd = display_fd;

@@ -154,6 +154,8 @@ struct v3dv_physical_device {
 
    mtx_t mutex;
 
+   struct v3dv_instance *instance;
+
    struct wsi_device wsi_device;
 
    VkPhysicalDeviceMemoryProperties memory;
@@ -228,6 +230,8 @@ struct v3dv_instance {
 
    struct driOptionCache dri_options;
    struct driOptionCache available_dri_options;
+
+   char *force_vk_devicename;
 
    bool pipeline_cache_enabled;
    bool default_pipeline_cache_enabled;
