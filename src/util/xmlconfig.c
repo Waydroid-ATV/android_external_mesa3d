@@ -1262,7 +1262,7 @@ driParseConfigFiles(driOptionCache *cache, const driOptionCache *info,
 
 #if WITH_XMLCONFIG
    const char *configdir;
-   char *home;
+   const char *home;
 
    /* parse from either $DRIRC_CONFIGDIR or $datadir/drirc.d */
    if ((configdir = os_get_option("DRIRC_CONFIGDIR")))
