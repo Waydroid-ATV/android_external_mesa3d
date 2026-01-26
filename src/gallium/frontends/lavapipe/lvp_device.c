@@ -31,6 +31,7 @@
 #include "vk_sampler.h"
 #include "vk_util.h"
 #include "util/detect.h"
+#include "util/driconf.h"
 #include "pipe/p_defines.h"
 #include "pipe/p_state.h"
 #include "pipe/p_context.h"
@@ -914,7 +915,8 @@ lvp_get_properties(const struct lvp_physical_device *device, struct vk_propertie
       /* Vulkan 1.0 */
       .apiVersion = LVP_API_VERSION,
       .driverVersion = vk_get_driver_version(),
-      .vendorID = VK_VENDOR_ID_MESA,
+      .vendorID = device->instance->force_vk_vendor ? 
+                  device->instance->force_vk_vendor : VK_VENDOR_ID_MESA,
       .deviceID = 0,
       .deviceType = VK_PHYSICAL_DEVICE_TYPE_CPU,
       .maxImageDimension1D                      = device->pscreen->caps.max_texture_2d_size,
@@ -1440,6 +1442,7 @@ lvp_physical_device_init(struct lvp_physical_device *device,
    /* SNORM blending on llvmpipe fails CTS - disable by default */
    device->snorm_blend = debug_get_bool_option("LVP_SNORM_BLEND", false);
 
+   device->instance = instance;
    lvp_get_features(device, &device->vk.supported_features);
    lvp_get_properties(device, &device->vk.properties);
 
@@ -1473,6 +1476,26 @@ lvp_destroy_physical_device(struct vk_physical_device *device)
    lvp_physical_device_finish((struct lvp_physical_device *)device);
    vk_free(&device->instance->alloc, device);
 }
+
+static const 
+driOptionDescription lvp_dri_options[] = {
+   DRI_CONF_SECTION_DEBUG
+      DRI_CONF_FORCE_VK_VENDOR()
+   DRI_CONF_SECTION_END
+};
+
+static void
+lvp_init_dri_options(struct lvp_instance *instance)
+{
+   driParseOptionInfo(&instance->available_dri_options, lvp_dri_options,
+                      ARRAY_SIZE(lvp_dri_options));
+   driParseConfigFiles(&instance->dri_options, &instance->available_dri_options, 0, "lvp", NULL, NULL,
+                       instance->vk.app_info.app_name, instance->vk.app_info.app_version,
+                       instance->vk.app_info.engine_name, instance->vk.app_info.engine_version);
+   instance->force_vk_vendor =
+      driQueryOptioni(&instance->dri_options, "force_vk_vendor");
+}
+
 
 static VkResult
 lvp_enumerate_physical_devices(struct vk_instance *vk_instance);
@@ -1516,6 +1539,8 @@ VKAPI_ATTR VkResult VKAPI_CALL lvp_CreateInstance(
 
    //   VG(VALGRIND_CREATE_MEMPOOL(instance, 0, false));
 
+   lvp_init_dri_options(instance);
+
    *pInstance = lvp_instance_to_handle(instance);
 
    return VK_SUCCESS;
@@ -1531,6 +1556,9 @@ VKAPI_ATTR void VKAPI_CALL lvp_DestroyInstance(
       return;
 
    pipe_loader_release(&instance->devs, instance->num_devices);
+
+   driDestroyOptionCache(&instance->dri_options);
+   driDestroyOptionInfo(&instance->available_dri_options);
 
    vk_instance_finish(&instance->vk);
    vk_free(&instance->vk.alloc, instance);
