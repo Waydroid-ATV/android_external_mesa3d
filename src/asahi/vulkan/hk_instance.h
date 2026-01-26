@@ -18,6 +18,7 @@ struct hk_instance {
 
    uint8_t driver_build_sha[SHA1_DIGEST_LENGTH];
    uint32_t force_vk_vendor;
+   char *force_vk_devicename;
 
    bool no_border;
    bool fake_minmax;

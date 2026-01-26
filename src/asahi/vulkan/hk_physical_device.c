@@ -1014,7 +1014,8 @@ hk_get_device_properties(const struct agx_device *dev,
       .triStripVertexOrderIndependentOfProvokingVertex = false,
    };
 
-   strncpy(properties->deviceName, dev->name, sizeof(properties->deviceName));
+   strncpy(properties->deviceName, (strlen(instance->force_vk_devicename) > 0) ?
+            instance->force_vk_devicename : dev->name, sizeof(properties->deviceName));
 
    /* VK_EXT_shader_module_identifier */
    static_assert(sizeof(vk_shaderModuleIdentifierAlgorithmUUID) ==
