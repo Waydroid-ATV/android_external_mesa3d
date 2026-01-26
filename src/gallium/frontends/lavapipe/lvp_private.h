@@ -37,6 +37,7 @@
 #include "util/simple_mtx.h"
 #include "util/u_queue.h"
 #include "util/u_upload_mgr.h"
+#include "util/xmlconfig.h"
 
 #include "compiler/shader_enums.h"
 #include "pipe/p_screen.h"
@@ -153,6 +154,7 @@ void __lvp_finishme(const char *file, int line, const char *format, ...)
 struct lvp_physical_device {
    struct vk_physical_device vk;
 
+   struct lvp_instance *instance;
    struct pipe_loader_device *pld;
    struct pipe_screen *pscreen;
    const nir_shader_compiler_options *drv_options[LVP_SHADER_STAGES];
@@ -168,6 +170,10 @@ struct lvp_physical_device {
 struct lvp_instance {
    struct vk_instance vk;
 
+   struct driOptionCache dri_options;
+   struct driOptionCache available_dri_options;
+
+   uint32_t force_vk_vendor;
    uint64_t debug_flags;
 
    struct pipe_loader_device *devs;
