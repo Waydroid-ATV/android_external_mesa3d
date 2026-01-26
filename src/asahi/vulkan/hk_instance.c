@@ -89,6 +89,7 @@ static const driOptionDescription hk_dri_options[] = {
 
    DRI_CONF_SECTION_DEBUG
       DRI_CONF_FORCE_VK_VENDOR()
+      DRI_CONF_FORCE_VK_DEVICENAME()
       DRI_CONF_VK_WSI_FORCE_SWAPCHAIN_TO_CURRENT_EXTENT(false)
       DRI_CONF_VK_X11_IGNORE_SUBOPTIMAL(false)
    DRI_CONF_SECTION_END
@@ -114,6 +115,9 @@ hk_init_dri_options(struct hk_instance *instance)
 
    instance->force_vk_vendor =
       driQueryOptioni(&instance->dri_options, "force_vk_vendor");
+
+   instance->force_vk_devicename =
+      driQueryOptionstr(&instance->dri_options, "force_vk_devicename");
 
    instance->no_border =
       driQueryOptionb(&instance->dri_options, "hk_disable_border_emulation");
