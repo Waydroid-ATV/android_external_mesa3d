@@ -182,6 +182,7 @@ dzn_meta_blits_get_context(struct dzn_device *device,
 struct dzn_physical_device {
    struct vk_physical_device vk;
 
+   struct dzn_instance *instance;
    struct vk_physical_device_dispatch_table dispatch;
 
    IUnknown *adapter;
@@ -1275,6 +1276,8 @@ struct dzn_instance {
 
    struct driOptionCache dri_options;
    struct driOptionCache available_dri_options;
+
+   char *force_vk_devicename;
 };
 
 struct dzn_event {
