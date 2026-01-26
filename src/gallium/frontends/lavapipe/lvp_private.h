@@ -174,6 +174,8 @@ struct lvp_instance {
    struct driOptionCache available_dri_options;
 
    uint32_t force_vk_vendor;
+   char *force_vk_devicename;
+
    uint64_t debug_flags;
 
    struct pipe_loader_device *devs;
