@@ -1066,9 +1066,14 @@ dzn_physical_device_get_properties(const struct dzn_physical_device *pdev,
       .underlyingAPI = VK_LAYERED_DRIVER_UNDERLYING_API_D3D12_MSFT,
    };
 
-   snprintf(properties->deviceName,
-            sizeof(properties->deviceName),
-            "Microsoft Direct3D12 (%s)", pdev->desc.description);
+   if (strlen(pdev->instance->force_vk_devicename) > 0) {
+      snprintf(properties->deviceName, sizeof(properties->deviceName), "%s", 
+      pdev->instance->force_vk_devicename);
+   } else {
+      snprintf(properties->deviceName,
+               sizeof(properties->deviceName),
+               "Microsoft Direct3D12 (%s)", pdev->desc.description);
+   }
    memcpy(properties->pipelineCacheUUID,
           pdev->pipeline_cache_uuid, VK_UUID_SIZE);
    memcpy(properties->driverUUID, pdev->driver_uuid, VK_UUID_SIZE);
@@ -1753,6 +1758,7 @@ dzn_enumerate_physical_devices(struct vk_instance *instance)
 
 static const driOptionDescription dzn_dri_options[] = {
    DRI_CONF_SECTION_DEBUG
+      DRI_CONF_FORCE_VK_DEVICENAME()
       DRI_CONF_DZN_CLAIM_WIDE_LINES(false)
       DRI_CONF_DZN_ENABLE_8BIT_LOADS_STORES(false)
       DRI_CONF_DZN_DISABLE(false)
@@ -1768,6 +1774,9 @@ dzn_init_dri_config(struct dzn_instance *instance)
    driParseConfigFiles(&instance->dri_options, &instance->available_dri_options, 0, "dzn", NULL, NULL,
                        instance->vk.app_info.app_name, instance->vk.app_info.app_version,
                        instance->vk.app_info.engine_name, instance->vk.app_info.engine_version);
+
+   instance->force_vk_devicename =
+      driQueryOptionstr(&instance->dri_options, "force_vk_devicename");
 }
 
 static VkResult
