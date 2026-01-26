@@ -827,19 +827,26 @@ static bool pvr_physical_device_get_properties(
       .lineSubPixelPrecisionBits = line_sub_pixel_precision_bits,
    };
 
-   if (PVR_HAS_FEATURE(dev_info, gpu_multicore_support)) {
+   if (strlen(pdevice->instance->force_vk_devicename) > 0) {
       snprintf(properties->deviceName,
                sizeof(properties->deviceName),
-               "PowerVR %s %s MC%u",
-               dev_info->ident.series_name,
-               dev_info->ident.public_name,
-               dev_runtime_info->core_count);
+               "%s",
+               pdevice->instance->force_vk_devicename);
    } else {
-      snprintf(properties->deviceName,
-               sizeof(properties->deviceName),
-               "PowerVR %s %s",
-               dev_info->ident.series_name,
-               dev_info->ident.public_name);
+      if (PVR_HAS_FEATURE(dev_info, gpu_multicore_support)) {
+         snprintf(properties->deviceName,
+                  sizeof(properties->deviceName),
+                  "PowerVR %s %s MC%u",
+                  dev_info->ident.series_name,
+                  dev_info->ident.public_name,
+                  dev_runtime_info->core_count);
+      } else {
+         snprintf(properties->deviceName,
+                  sizeof(properties->deviceName),
+                  "PowerVR %s %s",
+                  dev_info->ident.series_name,
+                  dev_info->ident.public_name);
+      }
    }
 
    return true;
