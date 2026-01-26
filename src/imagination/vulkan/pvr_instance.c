@@ -22,6 +22,7 @@
 #include "wsi_common.h"
 
 #include "util/build_id.h"
+#include "util/driconf.h"
 
 #include "pvr_debug.h"
 #include "pvr_device.h"
@@ -329,6 +330,32 @@ pvr_get_driver_build_sha(struct pvr_instance *instance)
    return true;
 }
 
+static const driOptionDescription pvr_dri_options[] = {
+   DRI_CONF_SECTION_DEBUG
+      DRI_CONF_FORCE_VK_VENDOR()
+   DRI_CONF_SECTION_END
+};
+
+static void pvr_init_dri_options(struct pvr_instance *instance)
+{
+   driParseOptionInfo(&instance->available_dri_options,
+                      pvr_dri_options,
+                      ARRAY_SIZE(pvr_dri_options));
+   driParseConfigFiles(&instance->dri_options,
+                       &instance->available_dri_options,
+                       0,
+                       "pvr",
+                       NULL,
+                       NULL,
+                       instance->vk.app_info.app_name,
+                       instance->vk.app_info.app_version,
+                       instance->vk.app_info.engine_name,
+                       instance->vk.app_info.engine_version);
+
+   instance->force_vk_vendor =
+      driQueryOptioni(&instance->dri_options, "force_vk_vendor");
+}
+
 VkResult pvr_CreateInstance(const VkInstanceCreateInfo *pCreateInfo,
                             const VkAllocationCallbacks *pAllocator,
                             VkInstance *pInstance)
@@ -366,6 +393,7 @@ VkResult pvr_CreateInstance(const VkInstanceCreateInfo *pCreateInfo,
       goto err_free_instance;
 
    pvr_process_debug_variable();
+   pvr_init_dri_options(instance);
 
    instance->active_device_count = 0;
 
@@ -386,6 +414,8 @@ VkResult pvr_CreateInstance(const VkInstanceCreateInfo *pCreateInfo,
    return VK_SUCCESS;
 
 err_free_instance:
+   driDestroyOptionCache(&instance->dri_options);
+   driDestroyOptionInfo(&instance->available_dri_options);
    vk_free(pAllocator, instance);
    return result;
 }
@@ -399,6 +429,9 @@ void pvr_DestroyInstance(VkInstance _instance,
       return;
 
    VG(VALGRIND_DESTROY_MEMPOOL(instance));
+
+   driDestroyOptionCache(&instance->dri_options);
+   driDestroyOptionInfo(&instance->available_dri_options);
 
    vk_instance_finish(&instance->vk);
    vk_free(&instance->vk.alloc, instance);
