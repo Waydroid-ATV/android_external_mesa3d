@@ -55,6 +55,7 @@ struct panvk_instance {
 
    uint8_t driver_build_sha[BLAKE3_KEY_LEN];
    uint32_t force_vk_vendor;
+   char *force_vk_devicename;
 
    bool enable_vertex_pipeline_stores_atomics;
    bool force_enable_shader_atomics;
