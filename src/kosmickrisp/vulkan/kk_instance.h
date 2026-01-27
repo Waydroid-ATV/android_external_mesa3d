@@ -18,6 +18,7 @@ struct kk_instance {
 
    uint8_t driver_build_sha[VK_UUID_SIZE];
    uint32_t force_vk_vendor;
+   char *force_vk_devicename;
 };
 
 VK_DEFINE_HANDLE_CASTS(kk_instance, vk.base, VkInstance,

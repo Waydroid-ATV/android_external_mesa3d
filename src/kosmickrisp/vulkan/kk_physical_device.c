@@ -655,7 +655,8 @@ kk_get_device_properties(const struct kk_physical_device *pdev,
    char gpu_name[256u];
    mtl_device_get_name(pdev->mtl_dev_handle, gpu_name);
    snprintf(properties->deviceName, sizeof(properties->deviceName), "%s",
-            gpu_name);
+            (strlen(instance->force_vk_devicename) > 0) ?
+            instance->force_vk_devicename : gpu_name);
 
    /* Not sure if there are layout specific things, so for now just reporting
     * all layouts from extensions.
