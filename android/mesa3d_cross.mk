@@ -258,13 +258,14 @@ $(MESON_GEN_FILES_TARGET): $(sort $(shell find -L $(MESA3D_TOP) -not -path '*/\.
                              $(foreach inc,$(nospace-includes),'$(call abs-include,$(inc))', )'']\n" \
 		"c_link_args = [$(foreach flag, $(m-lld-flags-cleaned),'$(flag)',)'']\n"                                          \
 		"cpp_link_args = [$(foreach flag, $(m-lld-flags-cleaned),'$(flag)',)'']\n"                                        \
+		"bindgen_clang_arguments = ['--target=$(subst armv7a,armv7,$(PRIVATE_TARGET_TRIPLE))']\n"                         \
 		"needs_exe_wrapper = true\n"                                                                                      \
 		"skip_sanity_check = true\n"                                                                                      \
 		"[binaries]\n"                                                                                                    \
 		"ar = '$(AOSP_ABSOLUTE_PATH)/$($($(M_TARGET_PREFIX))TARGET_AR)'\n"                                                \
 		"c = [$(foreach arg,$(PRIVATE_CC),'$(subst prebuilts/,$(AOSP_ABSOLUTE_PATH)/prebuilts/,$(arg))',)'']\n"           \
 		"cpp = [$(foreach arg,$(PRIVATE_CXX),'$(subst prebuilts/,$(AOSP_ABSOLUTE_PATH)/prebuilts/,$(arg))',)'']\n"        \
-		"rust = ['rustc', '--target', '$(PRIVATE_TARGET_TRIPLE)', '-C', 'link-args=-target $(PRIVATE_TARGET_TRIPLE) -lc']\n"          \
+		"rust = ['rustc', '--target', '$(subst armv7a,armv7,$(PRIVATE_TARGET_TRIPLE))', '-C', 'link-args=-target $(subst armv7a,armv7,$(PRIVATE_TARGET_TRIPLE)) -lc']\n"          \
 		"c_ld = 'lld'\n"                                                                                                  \
 		"cpp_ld = 'lld'\n\n"                                                                                              \
 		"pkgconfig = ['env', 'PKG_CONFIG_LIBDIR=' + '$(call relative-to-absolute,$(MESON_GEN_DIR))', '/usr/bin/pkg-config']\n\n" \
