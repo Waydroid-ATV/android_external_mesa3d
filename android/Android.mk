@@ -133,7 +133,7 @@ MESON_GEN_PKGCONFIGS += android.hardware.graphics.mapper:4.0
 endif
 
 ifeq ($(strip $(BOARD_MESA3D_GALLIUM_VA)),enabled)
-LIBVA_DIR := hardware/intel/common/libva
+LIBVA_DIR := external/libva
 LIBVA_VERSION_MAJOR := $(shell sed -n -e 's/va_api_major_version *= *//p' $(LIBVA_DIR)/meson.build)
 LIBVA_VERSION_MINOR := $(shell sed -n -e 's/va_api_minor_version *= *//p' $(LIBVA_DIR)/meson.build)
 MESON_GEN_PKGCONFIGS += libva:$(LIBVA_VERSION_MAJOR).$(LIBVA_VERSION_MINOR)
