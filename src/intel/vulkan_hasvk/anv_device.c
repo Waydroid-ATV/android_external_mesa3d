@@ -136,21 +136,18 @@ compiler_perf_log(UNUSED void *data, UNUSED unsigned *id, const char *fmt, ...)
 #define ANV_USE_WSI_PLATFORM
 #endif
 
-#ifdef ANDROID_STRICT
-#define ANV_API_VERSION VK_MAKE_VERSION(1, 1, VK_HEADER_VERSION)
-#else
+#if !defined(ANDROID_STRICT) || ANDROID_API_LEVEL >= 33
 #define ANV_API_VERSION_1_3 VK_MAKE_VERSION(1, 3, VK_HEADER_VERSION)
 #define ANV_API_VERSION_1_2 VK_MAKE_VERSION(1, 2, VK_HEADER_VERSION)
+#else
+#define ANV_API_VERSION_1_3 VK_MAKE_VERSION(1, 1, VK_HEADER_VERSION)
+#define ANV_API_VERSION_1_2 VK_MAKE_VERSION(1, 1, VK_HEADER_VERSION)
 #endif
 
 VkResult anv_EnumerateInstanceVersion(
     uint32_t*                                   pApiVersion)
 {
-#ifdef ANDROID_STRICT
-   *pApiVersion = ANV_API_VERSION;
-#else
    *pApiVersion = ANV_API_VERSION_1_3;
-#endif
    return VK_SUCCESS;
 }
 
@@ -978,12 +975,8 @@ get_properties(const struct anv_physical_device *pdevice,
       isl_device_get_sample_counts(&pdevice->isl_dev);
 
    *props = (struct vk_properties) {
-#if DETECT_OS_ANDROID
-      .apiVersion = ANV_API_VERSION,
-#else
       .apiVersion = (pdevice->use_softpin || pdevice->instance->report_vk_1_3) ?
          ANV_API_VERSION_1_3 : ANV_API_VERSION_1_2,
-#endif /* DETECT_OS_ANDROID */
       .driverVersion = vk_get_driver_version(),
       .vendorID = 0x8086,
       .deviceID = pdevice->info.pci_device_id,
