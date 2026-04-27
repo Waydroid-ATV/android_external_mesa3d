@@ -1471,7 +1471,7 @@ radv_image_create(VkDevice _device, const struct radv_image_create_info *create_
       image->queue_family_mask &= ~(1u << RADV_QUEUE_SPARSE);
    }
 
-   if (mod_list) {
+   if (mod_list && pdev->info.gfx_level >= GFX9) {
       result = radv_select_modifier(device, format, mod_list, &modifier);
       if (result != VK_SUCCESS) {
          radv_destroy_image(device, alloc, image);
