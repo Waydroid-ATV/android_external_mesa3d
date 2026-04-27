@@ -1392,7 +1392,7 @@ radv_select_modifier(const struct radv_device *dev, VkFormat format,
                      const struct VkImageDrmFormatModifierListCreateInfoEXT *mod_list, uint64_t *modifier)
 {
    const struct radv_physical_device *pdev = radv_device_physical(dev);
-   unsigned mod_count;
+   unsigned *mod_count = malloc(sizeof(unsigned));
    uint64_t *mods;
 
    assert(mod_list->drmFormatModifierCount);
@@ -1404,23 +1404,27 @@ radv_select_modifier(const struct radv_device *dev, VkFormat format,
       .dcc_retile = true,
    };
 
-   ac_get_supported_modifiers(&pdev->info, &modifier_options, radv_format_to_pipe_format(format), &mod_count, NULL);
+   ac_get_supported_modifiers(&pdev->info, &modifier_options, radv_format_to_pipe_format(format), mod_count, NULL);
 
-   mods = calloc(mod_count, sizeof(*mods));
-   if (!mods)
-      return VK_ERROR_OUT_OF_HOST_MEMORY;
+   if (*mod_count > 0) {
+      mods = calloc(*mod_count, sizeof(*mods));
+      if (!mods)
+         return VK_ERROR_OUT_OF_HOST_MEMORY;
 
-   ac_get_supported_modifiers(&pdev->info, &modifier_options, radv_format_to_pipe_format(format), &mod_count, mods);
+      ac_get_supported_modifiers(&pdev->info, &modifier_options, radv_format_to_pipe_format(format), mod_count, mods);
+   }
 
-   for (unsigned i = 0; i < mod_count; ++i) {
+   for (unsigned i = 0; i < *mod_count; ++i) {
       for (uint32_t j = 0; j < mod_list->drmFormatModifierCount; ++j) {
          if (mods[i] == mod_list->pDrmFormatModifiers[j]) {
+            free(mod_count);
             free(mods);
             *modifier = mod_list->pDrmFormatModifiers[j];
             return VK_SUCCESS;
          }
       }
    }
+   free(mod_count);
    UNREACHABLE("App specified an invalid modifier");
 }
 
