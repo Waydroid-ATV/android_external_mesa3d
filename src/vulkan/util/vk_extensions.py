@@ -50,15 +50,7 @@ class Extension:
         return ext
 
     def c_android_condition(self):
-        # if it's an EXT or vendor extension, it's allowed
-        if not self.name.startswith(ANDROID_EXTENSION_WHITELIST_PREFIXES):
-            return 'true'
-
-        allowed_version = ALLOWED_ANDROID_VERSION.get(self.name, None)
-        if allowed_version is None:
-            return 'false'
-
-        return 'ANDROID_API_LEVEL >= %d' % (allowed_version)
+        return 'true'
 
 class ApiVersion:
     def __init__(self, version):

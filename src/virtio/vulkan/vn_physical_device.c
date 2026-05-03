@@ -1489,7 +1489,7 @@ vn_physical_device_init_supported_extensions(
    for (uint32_t i = 0; i < VK_DEVICE_EXTENSION_COUNT; i++) {
       const VkExtensionProperties *props = &vk_device_extensions[i];
 
-#ifdef ANDROID_STRICT
+#if 0
       if (!vk_android_allowed_device_extensions.extensions[i])
          continue;
 #endif
