@@ -1,0 +1,129 @@
+// Stub for satisfying dependency checks on A15+
+
+cc_defaults {
+    name: "mesa_stub_defaults",
+    vendor: true,
+}
+
+cc_defaults {
+    name: "mesa_gfxstream_guest_cc_defaults",
+    host_supported: true,
+    vendor: true,
+}
+
+cc_defaults {
+    name: "mesa_platform_virtgpu_defaults",
+    defaults: ["mesa_stub_defaults"],
+    header_libs: [
+        "mesa_src_headers",
+        "mesa_gfxstream_virtgpu",
+    ],
+    static_libs: [
+        "mesa_platform_virtgpu",
+        "mesa_util",
+        "mesa_util_c11",
+    ],
+}
+
+cc_library_headers {
+    name: "mesa_gfxstream_aemu_headers",
+    defaults: ["mesa_stub_defaults"],
+    host_supported: true,
+}
+
+cc_library_headers {
+    name: "mesa_gfxstream_guest_android_headers",
+    defaults: ["mesa_stub_defaults"],
+}
+
+cc_library_headers {
+    name: "mesa_gfxstream_guest_iostream",
+    defaults: ["mesa_gfxstream_guest_cc_defaults"],
+}
+
+cc_library_headers {
+    name: "mesa_gfxstream_virtgpu",
+    defaults: ["mesa_gfxstream_guest_cc_defaults"],
+}
+
+cc_library_headers {
+    name: "mesa_src_headers",
+    vendor_available: true,
+    host_supported: true,
+}
+
+cc_library_headers {
+    name: "virtgpu_kumquat_ffi_headers_mesa3d",
+    defaults: ["mesa_gfxstream_guest_cc_defaults"],
+}
+
+cc_library_shared {
+    name: "vulkan.ranchu",
+    defaults: [
+        "mesa_gfxstream_guest_cc_defaults",
+        "mesa_platform_virtgpu_defaults",
+    ],
+}
+
+cc_library_static {
+    name: "mesa_gfxstream_connection_manager",
+    defaults: [
+        "mesa_gfxstream_guest_cc_defaults",
+        "mesa_platform_virtgpu_defaults",
+    ],
+}
+
+cc_library_static {
+    name: "mesa_gfxstream_guest_android",
+    defaults: [
+        "mesa_gfxstream_guest_cc_defaults",
+        "mesa_platform_virtgpu_defaults",
+    ],
+}
+
+cc_library_static {
+    name: "mesa_goldfish_address_space",
+    defaults: [
+        "mesa_gfxstream_guest_cc_defaults",
+        "mesa_platform_virtgpu_defaults",
+    ],
+}
+
+cc_library_static {
+    name: "mesa_platform_virtgpu",
+    defaults: ["mesa_gfxstream_guest_cc_defaults"],
+    header_libs: [
+        "mesa_gfxstream_virtgpu",
+    ],
+    target: {
+        host: {
+            header_libs: [
+                "virtgpu_kumquat_ffi_headers_mesa3d",
+            ],
+        }
+    }
+}
+
+cc_library_static {
+    name: "mesa_util",
+    defaults: ["mesa_stub_defaults"],
+    host_supported: true,
+}
+
+cc_library_static {
+    name: "mesa_util_c11",
+    defaults: ["mesa_stub_defaults"],
+    host_supported: true,
+}
+
+filegroup {
+    name: "mesa_vulkan_xml",
+    srcs: ["src/vulkan/registry/vk.xml"],
+}
+
+python_binary_host {
+    name: "vk_icd_gen",
+    main: "src/vulkan/util/vk_icd_gen.py",
+    srcs: ["src/vulkan/util/vk_icd_gen.py"],
+    libs: ["mako"],
+}
