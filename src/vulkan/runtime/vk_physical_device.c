@@ -93,7 +93,7 @@ vk_common_EnumerateDeviceExtensionProperties(VkPhysicalDevice physicalDevice,
       if (!pdevice->supported_extensions.extensions[i])
          continue;
 
-#ifdef ANDROID_STRICT
+#if 0
       if (!vk_android_allowed_device_extensions.extensions[i])
          continue;
 #endif

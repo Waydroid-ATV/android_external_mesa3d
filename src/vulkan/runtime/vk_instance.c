@@ -167,7 +167,7 @@ vk_instance_init(struct vk_instance *instance,
                           "%s not supported",
                           pCreateInfo->ppEnabledExtensionNames[i]);
 
-#ifdef ANDROID_STRICT
+#if 0
       if (!vk_android_allowed_instance_extensions.extensions[idx])
          return vk_errorf(instance, VK_ERROR_EXTENSION_NOT_PRESENT,
                           "%s not supported",
@@ -281,7 +281,7 @@ vk_enumerate_instance_extension_properties(
       if (!supported_extensions->extensions[i])
          continue;
 
-#ifdef ANDROID_STRICT
+#if 0
       if (!vk_android_allowed_instance_extensions.extensions[i])
          continue;
 #endif
