@@ -43,6 +43,7 @@ LLVM_VERSION_MAJOR = $(shell \
         fi; \
     fi)
 
+MESA_VK_LIB_SUFFIX_asahi := asahi
 MESA_VK_LIB_SUFFIX_amd := radeon
 MESA_VK_LIB_SUFFIX_intel := intel
 MESA_VK_LIB_SUFFIX_intel_hasvk := intel_hasvk
