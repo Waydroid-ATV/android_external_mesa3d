@@ -121,9 +121,21 @@ filegroup {
     srcs: ["src/vulkan/registry/vk.xml"],
 }
 
+filegroup {
+    name: "vk_api_xml",
+    srcs: [":mesa_vulkan_xml"],
+}
+
 python_binary_host {
     name: "vk_icd_gen",
     main: "src/vulkan/util/vk_icd_gen.py",
     srcs: ["src/vulkan/util/vk_icd_gen.py"],
-    libs: ["mako"],
+    libs: ["mako", "pyyaml"],
+}
+
+python_binary_host {
+    name: "vk_icd_py_binary",
+    main: "src/vulkan/util/vk_icd_gen.py",
+    srcs: ["src/vulkan/util/vk_icd_gen.py"],
+    libs: ["mako", "pyyaml"],
 }
